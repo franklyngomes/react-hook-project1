@@ -6,6 +6,8 @@ export const endPoints = {
     pages:{
         create: `/product/create`,
         list: `/product/list/`,
-        delete:`/product/remove`
+        delete:`/product/remove`,
+        details:`/product/detail/`,
+        profile:`/user/profile-details/`
     }
 }

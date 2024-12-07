@@ -5,8 +5,9 @@ import Wrapper from "./pages/layout/wrapper/Wrapper.jsx";
 import Registration from "./pages/auth/registration/Registration.jsx";
 import CreateProduct from "./pages/products/create_product/CreateProduct.jsx";
 import ProductList from "./pages/products/product_list/ProductList.jsx";
+import ProductDetails from "./pages/products/product_details/ProductDetails.jsx";
 import ProductUpdate from "./pages/products/product_update/ProductUpdate.jsx";
-import ListProducts from "./pages/products/product_list/ListProducts.jsx";
+import Profile from "./pages/auth/profile_details/Profile.jsx";
 function App() {
   let public_router = [
     {
@@ -20,12 +21,20 @@ function App() {
   ];
   let private_router = [
     {
+      path: "/profile",
+      Component: <Profile />,
+    },
+    {
       path: "/create",
       Component: <CreateProduct />,
     },
     {
       path: "/list",
       Component: <ProductList  />,
+    },
+    {
+      path: "/details/:id",
+      Component: <ProductDetails/>,
     },
     {
       path: "/update",

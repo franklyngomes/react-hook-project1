@@ -10,6 +10,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { productImg } from "../../../api/axios";
 import SweetAlertComponent from "../../ui/SweetAlert";
 import Grid from "@mui/material/Grid";
+import Link from '@mui/material/Link';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -44,38 +45,38 @@ const ProductList = () => {
   }, []);
   return (
     <>
-      <Grid container spacing={2} padding="10px">
+      <Grid container spacing={2}  sx={{maxWidth: '1250px', margin: '0 auto', marginTop: "30px" }}>
         {products?.map((item, index) => {
           return (
             <Grid
               item
               xs={12}
               sm={6}
-              md={3}
+              md={2}
               key={index}
               display="flex"
               justifyContent="center"
               alignItems="center"
             >
-              <Card sx={{ width: "100%" }} key={index}>
+              <Card sx={{ width: 200}} key={index}>
                 <CardMedia
-                  sx={{ height: 180 }}
+                sx={{ height: 200}}
                   image={productImg(item.image)}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography gutterBottom variant="subtitle2" component="span">
                     {item.title}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {item.description}
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">Learn More</Button>
+                <Link href={`/details/${item._id}`} underline="none" key={index}>
+                  <Button size="small">Read More</Button>
+                </Link>
                   <Button
                     onClick={() => {
                       setDeleteId(item._id), setModal(true);
                     }}
+                    size="small"
                   >
                     delete
                   </Button>
