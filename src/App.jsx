@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/auth/login/Login.jsx";
 import Wrapper from "./pages/layout/wrapper/Wrapper.jsx";
 import Registration from "./pages/auth/registration/Registration.jsx";
@@ -8,6 +8,20 @@ import ProductList from "./pages/products/product_list/ProductList.jsx";
 import ProductDetails from "./pages/products/product_details/ProductDetails.jsx";
 import ProductUpdate from "./pages/products/product_update/ProductUpdate.jsx";
 import Profile from "./pages/auth/profile_details/Profile.jsx";
+import toast from "react-hot-toast";
+
+const Private_router = ({children}) => {
+  const token = localStorage.getItem("token")
+  return token != null || token != undefined ? (
+    children
+  ):(
+    <>
+      <Navigate to={'/'}/>
+      {toast.success("Login First")}
+    </>
+  )
+}
+
 function App() {
   let public_router = [
     {
@@ -56,7 +70,7 @@ function App() {
             {private_router.map((item, index) => {
               return (
                 <>
-                  <Route key={index} path={item.path} element={item.Component} />
+                  <Route key={index} path={item.path} element={<Private_router>{item.Component}</Private_router>} />
                 </>
               );
             })}

@@ -11,7 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 
 const pages = [
   {
@@ -96,7 +96,7 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page, index) => (
-                <Link href={page.component} underline="none" key={index}>
+                <Link to={page.component} underline="none" key={index}>
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Typography sx={{ textAlign: "center" }}>
                       {page.name}
@@ -126,7 +126,7 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page, index) => (
-              <Link href={page.component} underline="none" key={index}>
+              <Link to={page.component} underline="none" key={index}>
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
@@ -159,12 +159,12 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Link href="/profile" underline="none">
+                <Link to="/profile" underline="none">
                   <Typography sx={{ textAlign: "center" }}>Profile</Typography>
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>
-                <Link href="/" underline="none">
+                <Link to="/" underline="none">
                   <Typography
                     sx={{ textAlign: "center" }}
                     onClick={handleLogout}
