@@ -51,7 +51,7 @@ function App() {
       Component: <ProductDetails/>,
     },
     {
-      path: "/update",
+      path: "/update/:id",
       Component: <ProductUpdate />,
     },
   ];

@@ -1,70 +1,83 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid2";
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import axiosInstance from "../../../api/axios";
 import { endPoints } from "../../../api/endPoints";
 import { useParams } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import { styled } from '@mui/material/styles';
-import Grid from "@mui/material/Grid2";
-import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 import { productImg } from "../../../api/axios";
 
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    ...theme.applyStyles('dark', {
-      backgroundColor: '#1A2027',
-    }),
-  }));
-const ProductDetails = () => {
-  const [details, setDetails] = useState(null);
-  let { id } = useParams();
-  const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(endPoints.pages.details + id);
-        if (response.status === 200) {
-          setDetails(response.data.data)
-          console.log(response.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-  }
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
 
+const ProductDetails = () => {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const fetchProduct = async () => {
+    try {
+      const response = await axiosInstance.get(endPoints.pages.details + id);
+      if (response.status === 200) {
+        setProduct(response.data.data);
+        console.log(response.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    fetchData()
-  }, [id]);
-  if (!details) {
-    return <div>Loading...</div>; // Or any loading spinner/indicator
-  }
+    fetchProduct();
+  }, []);
   return (
-    <>
-      <Box sx={{ flexGrow: 1, maxWidth: '1250px', margin: '0 auto', marginTop: "30px" }}>
-        <Grid container spacing={2} key={details._id}>
-          <Grid size={{ xs: 12, md: 6 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        maxWidth: "1100px",
+        margin: "0 auto",
+        marginTop: "20px",
+      }}
+    >
+      {product && (
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 8 }}>
             <Item>
-              <img src={productImg(details.image)} alt={details.title} width={"70%"}/>
+              <img
+                style={{ height: 350}}
+                src={productImg(product?.image)}
+                title="green iguana"
+              />
             </Item>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid size={{ xs: 12, sm: 4, md: 4 }}>
             <Item>
-              <Typography gutterBottom variant="h4" component="div" style={{color:"black",fontSize: "2rem", fontWeight: "700", textAlign:"left"}}>
-                {details.title}
+              <Typography gutterBottom variant="h5" component="div">
+                {product?.title}
               </Typography>
-              <Typography gutterBottom variant="p" component="div" style={{color:"black", textAlign:"left"}}>
-                Description
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {product?.description}
               </Typography>
-              <Typography gutterBottom variant="h6" component="div" style={{color:"black",textAlign:"left"}}>
-                {details.description}
-              </Typography>
+              <CardActions>
+                <Link href={`/update/${product?._id}`} underline="none">
+                  <Button size="small">Update</Button>
+                </Link>
+              </CardActions>
             </Item>
           </Grid>
         </Grid>
-      </Box>
-    </>
+      )}
+    </Box>
   );
 };
 

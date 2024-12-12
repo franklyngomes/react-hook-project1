@@ -70,7 +70,7 @@ const ProductList = () => {
                 </CardContent>
                 <CardActions>
                 <Link href={`/details/${item._id}`} underline="none" key={index}>
-                  <Button size="small">Read More</Button>
+                  <Button size="small">Details</Button>
                 </Link>
                   <Button
                     onClick={() => {

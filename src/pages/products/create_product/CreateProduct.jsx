@@ -31,7 +31,7 @@ const CreateProduct = () => {
         toast.error(response.data.message || "Failed to create product!");
       }
     } catch (error) {
-      toast.error(response.data.message || "An error occurred!");
+      toast.error(error, "An error occurred!");
     }
   };
 
