@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Stack,
   Grid,
@@ -7,13 +7,14 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import Spinner from 'react-bootstrap/Spinner';
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import axiosInstance from "../../../api/axios";
 import { endPoints } from "../../../api/endPoints";
 
 const CreateProduct = () => {
-  const { register, handleSubmit,formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful, isSubmitting} } = useForm();
   const [image, setImage] = useState(null);
 
   const ClickFunction = async (data) => {
@@ -34,6 +35,13 @@ const CreateProduct = () => {
       toast.error(error, "An error occurred!");
     }
   };
+  useEffect(() => {
+    reset({
+      title: " ",
+      description: " ",
+    })
+    setImage(null)
+  }, [isSubmitSuccessful])
 
   return (
     <Grid
@@ -49,7 +57,7 @@ const CreateProduct = () => {
           gutterBottom
           style={{ marginBottom: 20 }}
         >
-          Create Product
+          Add Product
         </Typography>
         <form>
           <TextField
@@ -101,7 +109,7 @@ const CreateProduct = () => {
               </Typography>
             </Stack>
           )}
-          <Button variant='contained' onClick={handleSubmit(ClickFunction)}  sx={{ mt: 3, fontSize: 14, color: '#000' }}>Add Product</Button>
+          <Button variant='contained' onClick={handleSubmit(ClickFunction)}  sx={{ mt: 3, fontSize: 14,textTransform: "capitalize", color: '#ffff' }} disabled={isSubmitting}>Add Product  {isSubmitting ? <Spinner animation="border" size="sm" style={{marginLeft: "10px"}}/> : " "}</Button>
         </form>
       </Paper>
     </Grid>

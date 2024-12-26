@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../../api/axios";
 import { endPoints } from "../../../api/endPoints";
 import Card from "@mui/material/Card";
+import { Box } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -10,39 +11,70 @@ import CardMedia from "@mui/material/CardMedia";
 import { productImg } from "../../../api/axios";
 import SweetAlertComponent from "../../ui/SweetAlert";
 import Grid from "@mui/material/Grid";
-import Link from '@mui/material/Link';
+import { Link } from "react-router-dom";
+import Pagination from '@mui/material/Pagination';
+import toast from "react-hot-toast";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
+  const [totalPage, setTotalPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [modal, setModal] = useState(false);
 
   const handleDelete = async () => {
     const formData = new FormData();
     formData.append("id", deleteId);
     try {
-      const response = await axiosInstance.post(
-        endPoints.pages.delete,
-        formData
-      );
-      if (response.status == 200) {
-        const newResponse = await axiosInstance.post(endPoints.pages.list);
-        setProducts(newResponse.data.data);
+      const response = await axiosInstance.post(endPoints.pages.delete, formData);
+      if (response.status === 200) {
+        toast.success("Product deleted successfully!");   
+        const updatedResponse = await axiosInstance.post(endPoints.pages.list, {
+          page:currentPage,
+          perPage: 10,
+        });
+        setProducts(updatedResponse.data.data);
+        setTotalPage(updatedResponse.data.totalPages || 1);
+        if (updatedResponse.data.data.length === 0 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
       } else {
-        console.log("Failed to delete product");
+        toast.error("Failed to delete product.");
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message || "An error occurred while deleting the product.");
     } finally {
       setModal(false);
     }
   };
+
   useEffect(() => {
-    axiosInstance.post(endPoints.pages.list).then((value) => {
-      setProducts(value.data.data);
-      console.log(value);
-    });
-  }, []);
+    const fetchProducts = async () => {
+      const formData = new FormData();
+      formData.append("page", currentPage);
+      formData.append("perPage", 10);
+
+      try {
+        const response = await axiosInstance.post(endPoints.pages.list, formData);
+
+        if (response.status === 200) {
+          setProducts(response.data.data);
+          setTotalPage(response.data.totalPages || 1);
+        } else {
+          toast.error(response.data.message || "Failed to fetch products.");
+        }
+      } catch (error) {
+        toast.error(error.message || "An error occurred while fetching products.");
+      }
+    };
+
+    fetchProducts();
+  }, [currentPage]);
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page)
+;
+  };
   return (
     <>
       <Grid container spacing={2}  sx={{maxWidth: '1250px', margin: '0 auto', marginTop: "30px" }}>
@@ -69,7 +101,7 @@ const ProductList = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                <Link href={`/details/${item._id}`} underline="none" key={index}>
+                <Link to={`/details/${item._id}`} underline="none" key={index}>
                   <Button size="small">Details</Button>
                 </Link>
                   <Button
@@ -95,6 +127,13 @@ const ProductList = () => {
           subtitle="You will not be able to recover this product"
         />
       )}
+      {products?.length !== 0 ? <Box display="flex" justifyContent="center" mt={4}>
+        <Pagination
+          count={totalPage}
+          page={currentPage}
+          onChange={handlePageChange}
+        />
+      </Box> : ""}
     </>
   );
 };

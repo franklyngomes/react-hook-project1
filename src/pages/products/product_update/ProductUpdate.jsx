@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -16,6 +16,7 @@ import axiosInstance from "../../../api/axios";
 import { endPoints } from "../../../api/endPoints";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
+import Spinner from 'react-bootstrap/Spinner';
 
 const ProductUpdate = () => {
   const { id } = useParams();
@@ -26,7 +27,7 @@ const ProductUpdate = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
   const ClickFunction = async (data) => {
@@ -198,9 +199,10 @@ const ProductUpdate = () => {
             <Button
               variant="contained"
               onClick={handleSubmit(ClickFunction)}
-              sx={{ mt: 3, color: "#000" }}
+              sx={{ mt: 3, color: "#fff",textTransform: "capitalize" }}
+              disabled={isSubmitting}
             >
-              <b>Save</b>
+              Save{isSubmitting ? <Spinner animation="border" size="sm" style={{marginLeft: "10px"}}/> : " "}
             </Button>
           </form>
         </Paper>

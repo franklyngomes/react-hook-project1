@@ -9,8 +9,9 @@ import Typography from "@mui/material/Typography";
 import axiosInstance from "../../../api/axios";
 import { endPoints } from "../../../api/endPoints";
 import { useParams } from "react-router-dom";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import { productImg } from "../../../api/axios";
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -69,7 +70,7 @@ const ProductDetails = () => {
                 {product?.description}
               </Typography>
               <CardActions>
-                <Link href={`/update/${product?._id}`} underline="none">
+                <Link to={`/update/${product?._id}`} underline="none">
                   <Button size="small">Update</Button>
                 </Link>
               </CardActions>
